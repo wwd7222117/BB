@@ -3,13 +3,13 @@
 // Copyright(c) 2020 Arthur Bacon and Kevin Dill
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this softwareand associated documentation files(the "Software"), to deal
+// of this software and associated documentation files(the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and /or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions :
 // 
-// The above copyright noticeand this permission notice shall be included in all
+// The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -73,7 +73,8 @@ int main(int argc, char* args[]) {
 
             graphics.resetFrame();
 
-            // Handle UI events - quit if appropriate, otherwise, pass them on to the UI controller (if any)
+            // TICK 
+
             while (SDL_PollEvent(&e) != 0) {
                 if (e.type == SDL_QUIT) { quit = true; }
                 if (Controller_UI::exists()) {
@@ -81,7 +82,11 @@ int main(int argc, char* args[]) {
                 }
             }
 
-            // TICK 
+            if (Controller_UI::exists()) {
+                Controller_UI::get().tick((float)deltaTSec);
+            }
+
+
             game.tick((float)deltaTSec);
 
             // RENDER
@@ -107,9 +112,6 @@ int main(int argc, char* args[]) {
                     graphics.drawMob(m);
                 }
             }
-
-            // Draw the elixir values:
-            graphics.drawElixir(northPlayer.getElixir(), southPlayer.getElixir());
 
             // If there is a winner, draw the message to the screen
             graphics.drawWinScreen(game.checkGameOver());

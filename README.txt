@@ -1,5 +1,5 @@
-Crash Loyal is a clone of a famous moble app game. This project is not to be
-used as a comercial product, simply as a teaching tool for 4150 Game AI.
+Crash Loyal is a clone of a famous mobile app game. This project is not to be
+used as a comercial product, simply as a teaching tool for 4150/5150 Game AI.
 
 To build and run the project, open a terminal into this root directory and run
 the following command:

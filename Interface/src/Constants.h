@@ -3,13 +3,13 @@
 // Copyright(c) 2020 Arthur Bacon and Kevin Dill
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this softwareand associated documentation files(the "Software"), to deal
+// of this software and associated documentation files(the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and /or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions :
 // 
-// The above copyright noticeand this permission notice shall be included in all
+// The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -35,7 +35,7 @@ const int UI_HEIGHT = GAME_GRID_HEIGHT; // The height of the UI Section is the h
 const int SCREEN_WIDTH_PIXELS = PIXELS_PER_METER * (GAME_GRID_WIDTH + UI_WIDTH); // The total number of pixels wide the window is
 const int SCREEN_HEIGHT_PIXELS = PIXELS_PER_METER * GAME_GRID_HEIGHT; // The total number of pixels tall the window is
 
-// Definig sizes of the river rectangle
+// Defining sizes of the river rectangle
 const float RIVER_LEFT_X = 0;
 const float RIVER_RIGHT_X = GAME_GRID_WIDTH;
 const float RIVER_TOP_Y = ((float)GAME_GRID_HEIGHT / 2.f) - 1.f;
@@ -68,10 +68,12 @@ const float TICK_MIN = 0.05f;
 const float TICK_MAX = 0.2f;
 
 // Elixir
-
 const float STARTING_ELIXIR = 8.f;
-const float ELIXIR_PER_SECOND = 0.33333f;
+const float ELIXIR_PER_SECOND = .33333f;
 const float MAX_ELIXIR = 10.01f; // a little bit more than 10, to avoid float error
+
+// Increase/decrease damage globally
+const float DAMAGE_MULTIPLIER = 1.f;
 
 
 

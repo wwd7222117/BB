@@ -1,1 +1,1 @@
-﻿D:\visualStudio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(382,5): error MSB3491: 未能向文件“Debug\Controll.AD6764CD.tlog\Controller_AI_KevinDill.lastbuildstate”写入命令行。路径: Debug\Controll.AD6764CD.tlog\Controller_AI_KevinDill.lastbuildstate 超过 OS 最大路径限制。完全限定的文件名必须少于 260 个字符。
+﻿D:\visualStudio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(439,5): error MSB8020: 无法找到 v143 的生成工具(平台工具集 =“v143”)。若要使用 v143 生成工具进行生成，请安装 v143 生成工具。或者，可以升级到当前 Visual Studio 工具，方式是通过选择“项目”菜单或右键单击该解决方案，然后选择“重定解决方案目标”。

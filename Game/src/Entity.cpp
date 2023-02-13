@@ -3,13 +3,13 @@
 // Copyright(c) 2020 Arthur Bacon and Kevin Dill
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this softwareand associated documentation files(the "Software"), to deal
+// of this software and associated documentation files(the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and /or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions :
 // 
-// The above copyright noticeand this permission notice shall be included in all
+// The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -45,16 +45,19 @@ void Entity::tick(float deltaTSec)
     if (targetInRange() && (m_TimeSinceAttack > m_Stats.getAttackTime()))
     {
         char buff[200];
+
+        const int damage = (int)((float)m_Stats.getDamage() * DAMAGE_MULTIPLIER);
+
         snprintf(buff, 200, "%s %s attacks %s %s for %d damage.\n",
                  m_bNorth ? "North" : "South",
                  m_Stats.getName(),
                  m_pTarget->isNorth() ? "North" : "South",
                  m_pTarget->getStats().getName(),
-                 m_Stats.getDamage());
+                 damage);
         std::cout << buff;
 
         m_bTargetLock = true;
-        m_pTarget->takeDamage(m_Stats.getDamage());
+        m_pTarget->takeDamage(damage);
         m_TimeSinceAttack = 0.f;
     }
 }

@@ -3,13 +3,13 @@
 // Copyright(c) 2020 Arthur Bacon and Kevin Dill
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this softwareand associated documentation files(the "Software"), to deal
+// of this software and associated documentation files(the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and /or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions :
 // 
-// The above copyright noticeand this permission notice shall be included in all
+// The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -24,9 +24,11 @@
 
 #include "Constants.h"
 #include "Game.h"
+#include "Player.h"
 
 #include <algorithm>
 #include <vector>
+#include <math.h>
 
 
 Mob::Mob(const iEntityStats& stats, const Vec2& pos, bool isNorth)
@@ -54,7 +56,7 @@ void Mob::move(float deltaTSec)
     //  Otherwise, we move toward the bridge.
     bool bMoveToTarget = false;
     if (!!m_pTarget)
-    {    
+    {
         bool imTop = m_Pos.y < (GAME_GRID_HEIGHT / 2);
         bool otherTop = m_pTarget->getPosition().y < (GAME_GRID_HEIGHT / 2);
 
@@ -66,7 +68,7 @@ void Mob::move(float deltaTSec)
 
     Vec2 destPos;
     if (bMoveToTarget)
-    { 
+    {
         m_pWaypoint = NULL;
         destPos = m_pTarget->getPosition();
     }
@@ -81,24 +83,39 @@ void Mob::move(float deltaTSec)
 
     // Actually do the moving
     Vec2 moveVec = destPos - m_Pos;
-    float distRemaining = moveVec.normalize();
-    float moveDist = m_Stats.getSpeed() * deltaTSec;
+    //float distRemaining = moveVec.normalize();
+    //float moveDist = m_Stats.getSpeed() * deltaTSec;
+    float distanceRemaining = moveVec.length();
+
+    Vec2 direction = moveVec / moveVec.length();
+    m_velocity = direction * m_Stats.getSpeed();
+
+    // PROJECT 2: This is where your collision code will be called from
+    std::vector < const Entity*> otherMob = checkCollision(deltaTSec);
+    for (const Entity* e : otherMob) {
+        processCollision(e, deltaTSec); //Cahnge velocity to account for collisions
+    }
+
+    //Distance to move by
+    Vec2 offset = m_velocity * deltaTSec;
+    
 
     // if we're moving to m_pTarget, don't move into it
     if (bMoveToTarget)
     {
         assert(m_pTarget);
-        distRemaining -= (m_Stats.getSize() + m_pTarget->getStats().getSize()) / 2.f;
-        distRemaining = std::max(0.f, distRemaining);
+        distanceRemaining -= (m_Stats.getSize() + m_pTarget->getStats().getSize()) / 2.f;
+        distanceRemaining = std::max(0.f, distanceRemaining);
+        
     }
 
-    if (moveDist <= distRemaining)
+    if (offset.length() <= distanceRemaining)
     {
-        m_Pos += moveVec * moveDist;
+        m_Pos += offset;
     }
     else
     {
-        m_Pos += moveVec * distRemaining;
+        m_Pos += (offset/offset.length())*distanceRemaining;
 
         // if the destination was a waypoint, find the next one and continue movement
         if (m_pWaypoint)
@@ -106,16 +123,14 @@ void Mob::move(float deltaTSec)
             m_pWaypoint = pickWaypoint();
             destPos = m_pWaypoint ? *m_pWaypoint : m_Pos;
             moveVec = destPos - m_Pos;
-            moveVec.normalize();
-            m_Pos += moveVec * distRemaining;
+            Vec2 direction = moveVec / moveVec.length();
+            m_velocity = direction * m_Stats.getSpeed();
+            Vec2 offset = m_velocity * deltaTSec;
+            m_Pos += (offset / offset.length()) * distanceRemaining;
         }
     }
 
-    // PROJECT 1: This is where your collision code will be called from
-    Mob* otherMob = checkCollision();
-    if (otherMob) {
-        processCollision(otherMob, deltaTSec);
-    }
+
 }
 
 const Vec2* Mob::pickWaypoint()
@@ -144,25 +159,74 @@ const Vec2* Mob::pickWaypoint()
     return pClosest;
 }
 
-// PROJECT 1: 
-//  1) return a vector of mobs that we're colliding with
-//  2) handle collision with towers & river 
-Mob* Mob::checkCollision() 
-{
-    //for (const Mob* pOtherMob : Game::get().getMobs())
-    //{
-    //    if (this == pOtherMob) 
-    //    {
-    //        continue;
-    //    }
 
-    //    // PROJECT 1: YOUR CODE CHECKING FOR A COLLISION GOES HERE
-    //}
-    return NULL;
+float EuclideanDistance(Vec2 a, Vec2 b) {
+    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
 
-void Mob::processCollision(Mob* otherMob, float deltaTSec) 
+// PROJECT 2: 
+//  1) return a vector of mobs that we're colliding with
+//  2) handle collision with towers & river 
+std::vector < const Entity*> Mob::checkCollision(float deltaTSec)
 {
-    // PROJECT 1: YOUR COLLISION HANDLING CODE GOES HERE
+    std::vector < const Entity*> collidingMobs =  std::vector < const Entity*>();
+    const Player& northPlayer = Game::get().getPlayer(true);
+    Vec2 ahead = m_Pos + ((m_velocity / m_velocity.length()) * deltaTSec * 2);
+    for (const Entity* pOtherMob : northPlayer.getMobs())
+    {
+        if (this == pOtherMob) 
+        {
+            continue;
+        }
+
+        // PROJECT 2: YOUR CODE CHECKING FOR A COLLISION GOES HERE
+        
+        if (EuclideanDistance(ahead,pOtherMob->getPosition()) < m_Stats.getSize()+pOtherMob->getStats().getSize()) {
+            collidingMobs.push_back(pOtherMob);
+            //std::cout << "Collision detected";
+        }
+
+    }
+
+    const Player& southPlayer = Game::get().getPlayer(false);
+    for (const Entity* pOtherMob : southPlayer.getMobs())
+    {
+        if (this == pOtherMob)
+        {
+            continue;
+        }
+
+        // PROJECT 2: YOUR CODE CHECKING FOR A COLLISION GOES HERE
+        if (EuclideanDistance(ahead, pOtherMob->getPosition()) < m_Stats.getSize() + pOtherMob->getStats().getSize()) {
+            collidingMobs.push_back(pOtherMob);
+            std::cout << "Collision detected";
+        }
+    }
+
+    return collidingMobs;
+}
+
+void Mob::processCollision(const Entity* otherMob, float deltaTSec)
+{
+    // PROJECT 2: YOUR COLLISION HANDLING CODE GOES HERE
+    Vec2 steeringForce;
+    Vec2 velocityChange;
+    if (m_Stats.getMass() < otherMob->getData().m_Stats.getMass()) {
+        Vec2 ahead = m_Pos + ((m_velocity / m_velocity.length()) * deltaTSec*2);
+        //Steering force = projected postition - obstacle position
+        steeringForce = ahead - otherMob->getData().m_Position;
+        steeringForce.normalize();
+        //Velocity = acceleration * time
+        velocityChange = steeringForce * deltaTSec*1000; 
+        //Add change in velocity to current velocity
+        m_velocity += velocityChange; 
+        //If speed is exceeding max speed set it to max speed
+        if (m_velocity.length() > m_Stats.getSpeed()) {
+            m_velocity.normalize();
+            m_velocity *= m_Stats.getSpeed();
+        }
+    
+    }
+
 }
 

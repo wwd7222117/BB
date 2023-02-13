@@ -30,13 +30,13 @@ Graphics::Graphics() {
 	}
 
     // init the text libraries
-    if (TTF_Init() < 0) {
-        printf("Text library TTF could not be Initialized correctly.\n");
-    }
+//     if (TTF_Init() < 0) {
+//         printf("Text library TTF could not be Initialized correctly.\n");
+//     }
 
-    // Load in the font 
-    sans = TTF_OpenFont("fonts/abelregular.ttf", 36);
-    if (!sans) { printf("TTF_OpenFont: %s\n", TTF_GetError()); }
+//     // Load in the font 
+//     sans = TTF_OpenFont("fonts/abelregular.ttf", 36);
+//     if (!sans) { printf("TTF_OpenFont: %s\n", TTF_GetError()); }
 }
 
 Graphics::~Graphics() {
@@ -79,7 +79,7 @@ void Graphics::drawMob(Entity* m) {
 
 
 void Graphics::drawSquare(float centerX, float centerY, float size) {
-    // Draws a square at the given pixel coorinate
+    // Draws a square at the given pixel coordinate
     SDL_Rect rect = {
         (int)(centerX - (size / 2.f)),
         (int)(centerY - (size / 2.f)),
@@ -112,25 +112,25 @@ void Graphics::drawBuilding(Entity* b) {
 }
 
 void Graphics::drawText(const char* textToDraw, SDL_Rect messageRect, SDL_Color color) {
-    // Draws the given text in a box with the specified position and dimention
+    // Draws the given text in a box with the specified position and dimension
 
-    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(sans, textToDraw, color); // TODO Make this print something other than m
-    if (!surfaceMessage) { printf("TTF_OpenFont: %s\n", TTF_GetError()); }
-    SDL_Texture* message = SDL_CreateTextureFromSurface(gRenderer, surfaceMessage);
-    if (!message) { printf("Error 2\n"); }
-    //SDL_Rect messageRect = {
-    //    topLeftXPix,
-    //    topLeftYPix,
-    //    boxWidth,
-    //    boxHeight
-    //    //(int)(centerX - (squareSize / 2.f)),
-    //    //(int)(centerY - (squareSize / 2.f)),
-    //    //(int)squareSize,
-    //    //(int)squareSize
-    //};
-    SDL_RenderCopy(gRenderer, message, NULL, &messageRect);
-    SDL_FreeSurface(surfaceMessage);
-    SDL_DestroyTexture(message);
+//     SDL_Surface* surfaceMessage = TTF_RenderText_Solid(sans, textToDraw, color); // TODO Make this print something other than m
+//     if (!surfaceMessage) { printf("TTF_OpenFont: %s\n", TTF_GetError()); }
+//     SDL_Texture* message = SDL_CreateTextureFromSurface(gRenderer, surfaceMessage);
+//     if (!message) { printf("Error 2\n"); }
+//     //SDL_Rect messageRect = {
+//     //    topLeftXPix,
+//     //    topLeftYPix,
+//     //    boxWidth,
+//     //    boxHeight
+//     //    //(int)(centerX - (squareSize / 2.f)),
+//     //    //(int)(centerY - (squareSize / 2.f)),
+//     //    //(int)squareSize,
+//     //    //(int)squareSize
+//     //};
+//     SDL_RenderCopy(gRenderer, message, NULL, &messageRect);
+//     SDL_FreeSurface(surfaceMessage);
+//     SDL_DestroyTexture(message);
 }
 
 void Graphics::drawGrid() {
@@ -195,29 +195,6 @@ void Graphics::drawBG() {
 
     drawGrid();
 }
-
-void Graphics::drawElixir(float northElixir, float southElixir)
-{
-    int xBuffer = 10;
-    int yBuffer = 100;
-    int height = 20;
-    int width = 100;
-    
-    char northMsg[1000];
-    char southMsg[1000];
-
-
-    snprintf(northMsg, 999, "Elixir: %d", (int)northElixir);
-    SDL_Color northColor = { 255, 0, 0, 255 };
-    SDL_Rect northRect = { xBuffer, yBuffer, width, height };
-    drawText(northMsg, northRect, northColor);
-
-    snprintf(southMsg, 999, "Elixir: %d", (int)southElixir);
-    SDL_Rect southRect = { xBuffer, SCREEN_HEIGHT_PIXELS - (yBuffer + height), width, height };
-    SDL_Color southColor = { 0, 0, 255, 255 };
-    drawText(southMsg, southRect, southColor);
-}
-
 
 void Graphics::drawWinScreen(int winningSide) {
     if (winningSide == 0) { return; }

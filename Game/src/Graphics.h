@@ -3,7 +3,7 @@
 #include "Entity.h"
 #include "SDL.h"
 #include "SDL_image.h"
-#include "SDL_ttf.h"
+// #include "SDL_ttf.h"
 #include "Singleton.h"
 
 class Graphics : public Singleton<Graphics> {
@@ -22,7 +22,6 @@ public:
 
 	void resetFrame();
 
-	void drawElixir(float northElixir, float southElixir);
 	void drawWinScreen(int winningSide);
 
 	void render();
@@ -38,5 +37,5 @@ private:
 
 	SDL_Renderer* gRenderer;
 	SDL_Window* gWindow;
-	TTF_Font* sans;
+// 	TTF_Font* sans;
 };
