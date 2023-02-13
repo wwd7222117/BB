@@ -1,0 +1,1 @@
+﻿D:\visualStudio\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(382,5): error MSB3491: 未能向文件“Debug\Controll.AD6764CD.tlog\Controller_AI_KevinDill.lastbuildstate”写入命令行。路径: Debug\Controll.AD6764CD.tlog\Controller_AI_KevinDill.lastbuildstate 超过 OS 最大路径限制。完全限定的文件名必须少于 260 个字符。

@@ -1,0 +1,9 @@
+﻿  Building.cpp
+  CrashLoyal.cpp
+  Entity.cpp
+  Game.cpp
+  Graphics.cpp
+  Mob.cpp
+  Player.cpp
+  正在生成代码...
+LINK : fatal error LNK1104: 无法打开文件“SDL2_ttf.lib”
